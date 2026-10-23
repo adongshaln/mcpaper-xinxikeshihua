@@ -31,7 +31,7 @@ final class HudManager implements Listener {
     }
 
     void start() {
-        if (settings.enabled()) {
+        if (settings.enabled() && settings.worldHudEnabled()) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (allowed(player)) {
                     ensure(player);
@@ -46,7 +46,7 @@ final class HudManager implements Listener {
         schedule();
         for (PlayerHud hud : huds.values()) {
             hud.applySettings(settings);
-            if (!settings.enabled()) {
+            if (!settings.enabled() || !settings.worldHudEnabled()) {
                 hud.hide();
             }
         }
@@ -82,7 +82,7 @@ final class HudManager implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        if (settings.enabled() && allowed(event.getPlayer())) {
+        if (settings.enabled() && settings.worldHudEnabled() && allowed(event.getPlayer())) {
             ensure(event.getPlayer());
         }
     }
@@ -96,7 +96,7 @@ final class HudManager implements Listener {
     public void onChangedWorld(PlayerChangedWorldEvent event) {
         // 展示实体还在旧世界，直接换一组更稳。
         remove(event.getPlayer());
-        if (settings.enabled() && allowed(event.getPlayer())) {
+        if (settings.enabled() && settings.worldHudEnabled() && allowed(event.getPlayer())) {
             ensure(event.getPlayer());
         }
     }
@@ -105,7 +105,7 @@ final class HudManager implements Listener {
     public void onRespawn(PlayerRespawnEvent event) {
         // 重生后客户端可能已经把展示实体清掉，换一组最稳。
         remove(event.getPlayer());
-        if (settings.enabled() && allowed(event.getPlayer())) {
+        if (settings.enabled() && settings.worldHudEnabled() && allowed(event.getPlayer())) {
             ensure(event.getPlayer());
         }
     }
@@ -118,7 +118,7 @@ final class HudManager implements Listener {
     }
 
     private void tick() {
-        if (!settings.enabled()) {
+        if (!settings.enabled() || !settings.worldHudEnabled()) {
             for (PlayerHud hud : huds.values()) {
                 hud.hide();
             }

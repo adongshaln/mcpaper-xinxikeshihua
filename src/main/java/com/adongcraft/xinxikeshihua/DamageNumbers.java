@@ -5,7 +5,10 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -70,7 +73,13 @@ final class DamageNumbers implements Listener {
             return;
         }
         boolean critical = event instanceof EntityDamageByEntityEvent byEntity && byEntity.isCritical();
-        spawn(entity, amount, event.getCause(), critical, false);
+        OverlayFeed feed = plugin.overlayFeed();
+        if (feed != null) {
+            feed.recordDamage(attacker(event), entity, amount, critical, event.getCause());
+        }
+        if (settings.inWorldDamageNumbers()) {
+            spawn(entity, amount, event.getCause(), critical, false);
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -84,7 +93,27 @@ final class DamageNumbers implements Listener {
         if (amount < 0.05D) {
             return;
         }
-        spawn(entity, amount, null, false, true);
+        OverlayFeed feed = plugin.overlayFeed();
+        if (feed != null && entity instanceof Player player) {
+            feed.recordHeal(player, amount);
+        }
+        if (settings.inWorldDamageNumbers()) {
+            spawn(entity, amount, null, false, true);
+        }
+    }
+
+    private static Player attacker(EntityDamageEvent event) {
+        if (!(event instanceof EntityDamageByEntityEvent byEntity)) {
+            return null;
+        }
+        Entity damager = byEntity.getDamager();
+        if (damager instanceof Player player) {
+            return player;
+        }
+        if (damager instanceof Projectile projectile && projectile.getShooter() instanceof Player player) {
+            return player;
+        }
+        return null;
     }
 
     private void spawn(LivingEntity entity, double amount, EntityDamageEvent.DamageCause cause,

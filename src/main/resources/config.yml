@@ -2,6 +2,8 @@
 enabled: true
 
 hud:
+  # 是否显示游戏内的展示实体 HUD。使用启动器悬浮窗时保持 false。
+  world-enabled: false
   # 视线检测距离（格）。方块和实体分开算，取更近的那个。
   block-reach: 5.0
   entity-reach: 4.0
@@ -36,5 +38,18 @@ damage-numbers:
   see-through: true
   # 是否显示治疗数字。
   show-healing: true
+  # 是否在游戏世界里生成伤害数字。使用启动器悬浮窗时保持 false。
+  in-world: false
   # 同时存在的伤害数字上限。
   max-active: 80
+
+# 启动器悬浮窗数据接口。
+# 启动器通过 HTTP 轮询这里的数据；需要把端口开放给玩家，并改掉 token。
+overlay:
+  enabled: true
+  # 0.0.0.0 允许远程连接；只在本机测试可以改成 127.0.0.1。
+  bind: 0.0.0.0
+  port: 8765
+  # 必须和 launcher_config.py 里的 OVERLAY_TOKEN 一致。
+  token: "change-me"
+  update-interval-ticks: 2
