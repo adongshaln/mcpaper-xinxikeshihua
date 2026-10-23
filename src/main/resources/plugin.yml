@@ -1,0 +1,18 @@
+name: mcpaper-xinxikeshihua
+version: 1.0.0
+main: com.adongcraft.xinxikeshihua.XinxiPlugin
+api-version: '26.3'
+description: 瞄准方块或实体时在左上角显示信息，并显示伤害数字
+author: adongshaln
+commands:
+  xinxikeshihua:
+    description: 开关或重载信息可视化
+    usage: /xinxikeshihua [toggle|reload]
+    aliases: [xxksh]
+permissions:
+  xinxikeshihua.use:
+    description: 使用信息可视化 HUD
+    default: true
+  xinxikeshihua.reload:
+    description: 重载信息可视化配置
+    default: op

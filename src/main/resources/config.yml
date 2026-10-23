@@ -1,0 +1,40 @@
+# 总开关。关掉后不显示 HUD，也不显示伤害数字。
+enabled: true
+
+hud:
+  # 视线检测距离（格）。方块和实体分开算，取更近的那个。
+  block-reach: 5.0
+  entity-reach: 4.0
+  # 刷新间隔（刻）。1 最流畅；服务器人多时可以调到 2。
+  update-interval-ticks: 1
+  # HUD 离眼睛多远（格）。越小越不容易被墙挡住，但会离镜头更近。
+  distance: 0.9
+  # 文字缩放。越大字越大。
+  scale: 0.085
+  # 视空间位置：负值向左，正值向上。以 distance 处的视平面为准。
+  anchor-x: -0.85
+  anchor-y: 0.34
+  # 每行文字的高度系数。默认 0.25；图标对不齐时可以微调。
+  line-height-factor: 0.25
+  # 文字背景不透明度（0-255）。
+  background-opacity: 140
+  # 血条下方最多显示几条状态。
+  max-effects: 4
+  # 是否显示方块图标和所需工具图标。
+  show-block-icon: true
+  show-tool-icon: true
+
+damage-numbers:
+  enabled: true
+  # 伤害数字停留的刻数。
+  lifetime-ticks: 24
+  # 每刻上升的高度。
+  rise-per-tick: 0.035
+  # 伤害数字缩放。
+  scale: 0.55
+  # 是否让伤害数字穿墙可见。
+  see-through: true
+  # 是否显示治疗数字。
+  show-healing: true
+  # 同时存在的伤害数字上限。
+  max-active: 80
