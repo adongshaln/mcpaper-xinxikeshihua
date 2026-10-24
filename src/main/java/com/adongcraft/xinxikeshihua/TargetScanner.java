@@ -31,6 +31,7 @@ public final class TargetScanner {
                 entity -> entity instanceof LivingEntity
                         && entity != player
                         && !entity.isDead()
+                        && player.canSee(entity)
                         && !Tags.isMarker(entity));
 
         double blockDistance = distance(eye, blockHit);
