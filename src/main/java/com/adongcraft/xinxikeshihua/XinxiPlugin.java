@@ -9,10 +9,16 @@ public final class XinxiPlugin extends JavaPlugin {
     private DamageNumbers numbers;
     private OverlayFeed overlayFeed;
     private OverlayServer overlayServer;
+    private NativeHud nativeHud;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        // Check the saved file, ignoring bundled defaults, so existing installs migrate too.
+        if(!getConfig().contains("native-hud-version",true) || getConfig().getInt("native-hud-version",0)<1) {
+            getConfig().set("native-hud-version",1);getConfig().set("hud.world-enabled",false);
+            getConfig().set("hud.background-opacity",0);getConfig().set("damage-numbers.in-world",true);saveConfig();
+        }
         settings = Settings.load(getConfig());
 
         hud = new HudManager(this);
@@ -29,6 +35,7 @@ public final class XinxiPlugin extends JavaPlugin {
 
         hud.start();
         numbers.start();
+        nativeHud=new NativeHud(this);getServer().getPluginManager().registerEvents(nativeHud,this);nativeHud.start();
         if (settings.overlayEnabled()) {
             startOverlay();
         }
@@ -37,6 +44,7 @@ public final class XinxiPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if(nativeHud!=null)nativeHud.stop();
         stopOverlay();
         if (hud != null) {
             hud.shutdown();
@@ -58,10 +66,7 @@ public final class XinxiPlugin extends JavaPlugin {
     }
 
     private void startOverlay() {
-        overlayFeed = new OverlayFeed(this);
-        getServer().getPluginManager().registerEvents(overlayFeed, this);
-        overlayFeed.start();
-        overlayServer = new OverlayServer(this, overlayFeed);
+        overlayServer = new OverlayServer(this, null);
         overlayServer.start();
     }
 

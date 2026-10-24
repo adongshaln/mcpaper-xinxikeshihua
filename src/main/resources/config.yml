@@ -2,12 +2,12 @@
 enabled: true
 
 hud:
-  # 是否显示游戏内的展示实体 HUD。使用启动器悬浮窗时保持 false。
+  # 旧展示实体 HUD，保持 false；新版由客户端直接绘制。
   world-enabled: false
   # 视线检测距离（格）。方块和实体分开算，取更近的那个。
   block-reach: 5.0
   entity-reach: 4.0
-  # 刷新间隔（刻）。1 最流畅；服务器人多时可以调到 2。
+  # 以下位置、缩放和刷新参数仅用于旧展示实体 HUD。新版固定每 2 刻扫描。
   update-interval-ticks: 1
   # HUD 离眼睛多远（格）。越小越不容易被墙挡住，但会离镜头更近。
   distance: 0.9
@@ -19,8 +19,8 @@ hud:
   # 每行文字的高度系数。默认 0.25；图标对不齐时可以微调。
   line-height-factor: 0.25
   # 文字背景不透明度（0-255）。
-  background-opacity: 140
-  # 血条下方最多显示几条状态。
+  background-opacity: 0
+  # 新版在同一行最多显示四种状态，超出行宽会截断。
   max-effects: 4
   # 是否显示方块图标和所需工具图标。
   show-block-icon: true
@@ -38,18 +38,21 @@ damage-numbers:
   see-through: true
   # 是否显示治疗数字。
   show-healing: true
-  # 是否在游戏世界里生成伤害数字。使用启动器悬浮窗时保持 false。
-  in-world: false
+  # 在世界中显示无背景伤害数字，新版默认 true。
+  in-world: true
   # 同时存在的伤害数字上限。
   max-active: 80
 
-# 启动器悬浮窗数据接口。
-# 启动器通过 HTTP 轮询这里的数据；需要把端口开放给玩家，并改掉 token。
+# 旧启动器兼容接口：只返回隐藏状态，让现有启动器停用悬浮窗内容。
+# 新 HUD 完全通过游戏连接传输，不依赖此端口。
 overlay:
   enabled: true
   # 0.0.0.0 允许远程连接；只在本机测试可以改成 127.0.0.1。
   bind: 0.0.0.0
   port: 8765
-  # 必须和 launcher_config.py 里的 OVERLAY_TOKEN 一致。
+  # 保留原值，以便旧启动器收到隐藏响应。
   token: "change-me"
   update-interval-ticks: 2
+
+# 原生 HUD 迁移标识，由插件自动维护。
+native-hud-version: 1

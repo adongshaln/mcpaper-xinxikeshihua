@@ -81,12 +81,8 @@ final class OverlayServer {
                 send(exchange, 401, "{\"error\":\"token\"}");
                 return;
             }
-            Map<String, String> query = query(exchange.getRequestURI().getRawQuery());
-            String playerName = query.get("player");
-            long since = parseLong(query.get("since"));
-            Player player = playerName == null ? null : Bukkit.getPlayerExact(playerName);
-            String body = player == null ? "{\"online\":false}" : feed.response(player, since);
-            send(exchange, 200, body);
+            // Existing launcher versions keep polling: tell them to draw nothing without an update.
+            send(exchange,200,"{\"online\":false,\"hidden\":true,\"target\":null,\"events\":[],\"lastId\":0}");
         } catch (RuntimeException exception) {
             plugin.getLogger().warning("悬浮窗请求失败：" + exception.getMessage());
             send(exchange, 500, "{\"error\":\"internal\"}");

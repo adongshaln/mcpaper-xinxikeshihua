@@ -64,7 +64,7 @@ final class DamageNumbers implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onDamage(EntityDamageEvent event) {
-        if (!settings.damageEnabled() || !(event.getEntity() instanceof LivingEntity entity)
+        if (!settings.enabled() || !settings.damageEnabled() || !(event.getEntity() instanceof LivingEntity entity)
                 || Tags.isMarker(entity)) {
             return;
         }
@@ -84,7 +84,7 @@ final class DamageNumbers implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onHeal(EntityRegainHealthEvent event) {
-        if (!settings.damageEnabled() || !settings.showHealing()
+        if (!settings.enabled() || !settings.damageEnabled() || !settings.showHealing()
                 || !(event.getEntity() instanceof LivingEntity entity)
                 || Tags.isMarker(entity)) {
             return;
@@ -140,6 +140,7 @@ final class DamageNumbers implements Listener {
                 entityDisplay.setSeeThrough(settings.damageSeeThrough());
                 entityDisplay.setShadowed(true);
                 entityDisplay.setDefaultBackground(false);
+                entityDisplay.setBackgroundColor(org.bukkit.Color.fromARGB(0,0,0,0));
                 entityDisplay.setTextOpacity((byte) 255);
                 entityDisplay.setBrightness(new Display.Brightness(15, 15));
                 entityDisplay.setViewRange(1.0F);
@@ -148,12 +149,16 @@ final class DamageNumbers implements Listener {
                 entityDisplay.setDisplayWidth(1.0F);
                 entityDisplay.setDisplayHeight(1.0F);
                 entityDisplay.setPersistent(false);
+                entityDisplay.setVisibleByDefault(false);
                 entityDisplay.addScoreboardTag(Tags.NUMBER);
             });
         } catch (RuntimeException exception) {
             plugin.getLogger().warning("无法创建伤害数字：" + exception.getMessage());
             return;
         }
+
+        for(Player viewer:world.getPlayers())if(plugin.hud().allowed(viewer) && viewer.getLocation().distanceSquared(at)<2304)
+            viewer.showEntity(plugin,display);
 
         while (floating.size() >= settings.maxActiveNumbers()) {
             Floating oldest = floating.removeFirst();

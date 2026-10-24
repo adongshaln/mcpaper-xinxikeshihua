@@ -1,5 +1,5 @@
 name: mcpaper-xinxikeshihua
-version: 1.0.0
+version: '${version}'
 main: com.adongcraft.xinxikeshihua.XinxiPlugin
 api-version: '26.3'
 description: 瞄准方块或实体时在左上角显示信息，并显示伤害数字
