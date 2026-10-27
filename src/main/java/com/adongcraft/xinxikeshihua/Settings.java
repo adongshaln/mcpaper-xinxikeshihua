@@ -26,11 +26,6 @@ public final class Settings {
     private final boolean showHealing;
     private final int maxActiveNumbers;
     private final boolean inWorldDamageNumbers;
-    private final boolean overlayEnabled;
-    private final String overlayBind;
-    private final int overlayPort;
-    private final String overlayToken;
-    private final int overlayUpdateTicks;
 
     private Settings(FileConfiguration config) {
         enabled = config.getBoolean("enabled", true);
@@ -56,14 +51,6 @@ public final class Settings {
         showHealing = config.getBoolean("damage-numbers.show-healing", true);
         maxActiveNumbers = clampInt(config.getInt("damage-numbers.max-active", 80), 1, 500);
         inWorldDamageNumbers = config.getBoolean("damage-numbers.in-world", false);
-
-        overlayEnabled = config.getBoolean("overlay.enabled", true);
-        String bind = config.getString("overlay.bind", "0.0.0.0");
-        overlayBind = bind == null || bind.isBlank() ? "0.0.0.0" : bind;
-        overlayPort = clampInt(config.getInt("overlay.port", 8765), 1024, 65535);
-        String token = config.getString("overlay.token", "change-me");
-        overlayToken = token == null ? "" : token;
-        overlayUpdateTicks = clampInt(config.getInt("overlay.update-interval-ticks", 2), 1, 10);
     }
 
     public static Settings load(FileConfiguration config) {
@@ -156,26 +143,6 @@ public final class Settings {
 
     public boolean inWorldDamageNumbers() {
         return inWorldDamageNumbers;
-    }
-
-    public boolean overlayEnabled() {
-        return overlayEnabled;
-    }
-
-    public String overlayBind() {
-        return overlayBind;
-    }
-
-    public int overlayPort() {
-        return overlayPort;
-    }
-
-    public String overlayToken() {
-        return overlayToken;
-    }
-
-    public int overlayUpdateTicks() {
-        return overlayUpdateTicks;
     }
 
     private static double clamp(double value, double min, double max) {

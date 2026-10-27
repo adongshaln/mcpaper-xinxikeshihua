@@ -43,16 +43,5 @@ damage-numbers:
   # 同时存在的伤害数字上限。
   max-active: 80
 
-# 旧启动器兼容接口：只返回隐藏状态，让现有启动器停用悬浮窗内容。
-# 新 HUD 完全通过游戏连接传输，不依赖此端口。
-overlay:
-  enabled: true
-  # 0.0.0.0 允许远程连接；只在本机测试可以改成 127.0.0.1。
-  bind: 0.0.0.0
-  port: 8765
-  # 保留原值，以便旧启动器收到隐藏响应。
-  token: "change-me"
-  update-interval-ticks: 2
-
 # 原生 HUD 迁移标识，由插件自动维护。
 native-hud-version: 1

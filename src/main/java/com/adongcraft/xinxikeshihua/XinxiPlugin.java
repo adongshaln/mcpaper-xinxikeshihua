@@ -1,14 +1,11 @@
 package com.adongcraft.xinxikeshihua;
 
-import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class XinxiPlugin extends JavaPlugin {
     private Settings settings;
     private HudManager hud;
     private DamageNumbers numbers;
-    private OverlayFeed overlayFeed;
-    private OverlayServer overlayServer;
     private NativeHud nativeHud;
 
     @Override
@@ -36,16 +33,12 @@ public final class XinxiPlugin extends JavaPlugin {
         hud.start();
         numbers.start();
         nativeHud=new NativeHud(this);getServer().getPluginManager().registerEvents(nativeHud,this);nativeHud.start();
-        if (settings.overlayEnabled()) {
-            startOverlay();
-        }
         getLogger().info("信息可视化已启用");
     }
 
     @Override
     public void onDisable() {
         if(nativeHud!=null)nativeHud.stop();
-        stopOverlay();
         if (hud != null) {
             hud.shutdown();
         }
@@ -55,31 +48,10 @@ public final class XinxiPlugin extends JavaPlugin {
     }
 
     public void reloadPlugin() {
-        stopOverlay();
         reloadConfig();
         settings = Settings.load(getConfig());
         hud.reload();
         numbers.reload();
-        if (settings.overlayEnabled()) {
-            startOverlay();
-        }
-    }
-
-    private void startOverlay() {
-        overlayServer = new OverlayServer(this, null);
-        overlayServer.start();
-    }
-
-    private void stopOverlay() {
-        if (overlayServer != null) {
-            overlayServer.stop();
-            overlayServer = null;
-        }
-        if (overlayFeed != null) {
-            HandlerList.unregisterAll(overlayFeed);
-            overlayFeed.stop();
-            overlayFeed = null;
-        }
     }
 
     public Settings settings() {
@@ -92,9 +64,5 @@ public final class XinxiPlugin extends JavaPlugin {
 
     DamageNumbers numbers() {
         return numbers;
-    }
-
-    OverlayFeed overlayFeed() {
-        return overlayFeed;
     }
 }

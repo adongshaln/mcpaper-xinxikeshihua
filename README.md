@@ -1,8 +1,8 @@
-# 信息可视化 1.1.1
+# 信息可视化 1.2.0
 
 Paper 26.3 插件，配套 Adongcraft 客户端组件 1.7.0。目标信息直接显示在游戏左上角，无背景、紧凑排列。组件由现有启动器按云端配置自动下载，无需重新打包启动器，游戏启动后不依赖启动器悬浮窗。
 
-1.1.1 的目标扫描尊重玩家的实体可见性，避免穿透伪装外观读到隐藏僵尸；复用现有客户端。
+1.2.0 移除旧启动器的 `/hud` HTTP 兼容接口及 `OverlayServer`/`OverlayFeed`：目标信息与伤害数字已全部由游戏内渠道承载，该接口只剩固定存根。旧启动器（0.4.x 及更早）轮询失败后会自动隐藏悬浮窗，无报错；服务端同时不再监听 8765 端口。1.1.1 的目标扫描尊重玩家的实体可见性，避免穿透伪装外观读到隐藏僵尸。
 
 ## 显示内容
 
@@ -20,14 +20,14 @@ Paper 26.3 插件，配套 Adongcraft 客户端组件 1.7.0。目标信息直接
 
 ## 通信与兼容
 
-客户端用 `xinxikeshihua:hello` 握手，服务端每两刻检查目标，通过 `xinxikeshihua:hud` 发送变更，至少每秒一次心跳。数据走现有 Minecraft 连接，新 HUD 不需要额外 HTTP 端口。客户端未安装组件时不发送目标快照。
+客户端用 `xinxikeshihua:hello` 握手，服务端每两刻检查目标，通过 `xinxikeshihua:hud` 发送变更，至少每秒一次心跳。数据走现有 Minecraft 连接，不需要额外 HTTP 端口。客户端未安装组件时不发送目标快照。
 
-原 `/hud` HTTP 接口仅保留兼容响应：`hidden: true`、空目标和空事件，让旧启动器自动隐藏悬浮窗内容。保留原绑定、端口及 token 配置即可。旧 `OverlayFeed` 不再启动。
+1.2.0 起不再提供 `/hud` HTTP 接口，`config.yml` 的 `overlay` 节已删除；升级后旧配置文件里残留的 `overlay` 节会被忽略。旧启动器悬浮窗轮询失败后自动隐藏，无需任何配置。
 
 首次升级自动设置 `native-hud-version: 1`、`hud.world-enabled: false`、`hud.background-opacity: 0`、`damage-numbers.in-world: true`。原展示实体目标 HUD 的位置、缩放参数仍保留给旧模式；新版固定左上角八像素边距，字号跟随原版 GUI 缩放。`block-reach`、`entity-reach`、`max-effects` 仍有效。
 
 ## 构建与验证
 
-使用 JDK 25、Gradle 9.1：`gradle assemble`。产物为 `build/libs/mcpaper-xinxikeshihua-1.1.0.jar`。替换服务端旧 JAR 后重启，客户端随 WitchHoe 1.7.0 配置一起激活。
+使用 JDK 25、Gradle 9.1：`gradle assemble`。产物为 `build/libs/mcpaper-xinxikeshihua-1.2.0.jar`。替换服务端旧 JAR 后重启，客户端随 WitchHoe 1.7.0 配置一起激活。
 
 已完成编译和隔离 Paper 启动检查；客户端启动与资源加载通过，真实游戏内画面和玩家手感由服主验收。没有扩大游戏测试范围。
